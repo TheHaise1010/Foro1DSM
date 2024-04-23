@@ -69,6 +69,12 @@ class MiDBHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, nu
         context.deleteDatabase(DATABASE_NAME)
         Toast.makeText(context, "Base de datos eliminada", Toast.LENGTH_SHORT).show()
     }
+    fun deleteUsuario(id: Int): Int {
+        val db = this.writableDatabase
+        val resultado = db.delete("usuarios", "id=?", arrayOf(id.toString()))
+        db.close()
+        return resultado
+    }
 }
 
 class MainActivity : AppCompatActivity() {
@@ -114,6 +120,17 @@ class MainActivity : AppCompatActivity() {
             }
             cursor.close()
         }
+
+        //DELETE DATA
+
+        val idUsuarioAEliminar = 1 // ID del usuario que quieres eliminar
+        val filasEliminadas = dbHelper.deleteUsuario(idUsuarioAEliminar)
+        if (filasEliminadas > 0) {
+            Toast.makeText(this, "Usuario eliminado correctamente", Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(this, "No se encontró ningún usuario con ese ID", Toast.LENGTH_SHORT).show()
+        }
+
         val loginButton = findViewById<Button>(R.id.login)
         val registroButton = findViewById<Button>(R.id.registro)
 
