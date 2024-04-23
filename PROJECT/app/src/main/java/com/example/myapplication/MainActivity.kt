@@ -3,6 +3,7 @@ package com.example.myapplication
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
+import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.os.Bundle
@@ -36,6 +37,9 @@ private const val SQL_CREATE_ENTRIES_2 = "CREATE TABLE detalle_compra (" +
         "    FOREIGN KEY (id_articulo) REFERENCES articulos(id)" +
         ");"
 private const val SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS MiTabla"
+private const val COLUMN_ID = "id"
+private const val COLUMN_CORREO = "correo"
+private const val COLUMN_PASSWORD = "password_"
 
 class MiDBHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
@@ -59,6 +63,10 @@ class MiDBHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, nu
         db.close()
         return result
     }
+    fun getUsuarios(): Cursor? {
+        val db = this.readableDatabase
+        return db.rawQuery("SELECT * FROM usuarios", null)
+    }
 }
 
 class MainActivity : AppCompatActivity() {
@@ -76,10 +84,10 @@ class MainActivity : AppCompatActivity() {
         } else {
             "Hubo un error al crear la base de datos."
         }
-        // Mostrar el Toast con el mensaje correspondiente
         Toast.makeText(this, mensaje, Toast.LENGTH_SHORT).show()
 
-        val correo = "jordanprueba@prueba.com"
+        //INSERT DATA
+        val correo = "jordanprueba3@prueba.com"
         val password = "1234"
         val result = dbHelper.insertDataUsuarios(correo, password)
 
@@ -88,8 +96,21 @@ class MainActivity : AppCompatActivity() {
         } else {
             Toast.makeText(this, "Error al insertar datos.", Toast.LENGTH_SHORT).show()
         }
-        //db?.close();
+        db.close()
 
+        //READ DATA
+        val cursor = dbHelper.getUsuarios()
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                val id = cursor.getInt(cursor.getColumnIndexOrThrow("id"))
+                val correo = cursor.getString(cursor.getColumnIndexOrThrow("correo"))
+                val password = cursor.getString(cursor.getColumnIndexOrThrow("password_"))
+                // Hacer algo con los datos leídos, por ejemplo mostrarlos en un Toast
+                val mensaje = "ID: $id, Nombre: $correo, Edad: $password"
+                Toast.makeText(this, mensaje, Toast.LENGTH_SHORT).show()
+            }
+            cursor.close()
+        }
         val loginButton = findViewById<Button>(R.id.login)
         val registroButton = findViewById<Button>(R.id.registro)
 
