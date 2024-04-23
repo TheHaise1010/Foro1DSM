@@ -16,19 +16,19 @@ private const val DATABASE_VERSION = 1
 private const val DATABASE_NAME = "Foro1.db"
 private const val SQL_CREATE_ENTRIES =
     "CREATE TABLE usuarios (" +
-            "    id INT PRIMARY KEY," +
+            "    id INTEGER PRIMARY KEY," +
             "    correo VARCHAR(255) UNIQUE," +
             "    password_ VARCHAR(255)" +
-            ")"+
+            ");"+
             ("CREATE TABLE articulos (" +
-                    "    id INT PRIMARY KEY," +
+                    "    id INTEGER PRIMARY KEY," +
                     "    nombre VARCHAR(255)," +
                     "    precio DECIMAL(10, 2)," +
                     "    imagen TEXT," +
                     "    descripcion TEXT" +
                     ");")
 private const val SQL_CREATE_ENTRIES_2 = "CREATE TABLE detalle_compra (" +
-        "    id_detalle INT PRIMARY KEY," +
+        "    id_detalle INTEGER PRIMARY KEY," +
         "    id_compra INT," +
         "    id_articulo INT," +
         "    cantidad INT," +
@@ -37,9 +37,6 @@ private const val SQL_CREATE_ENTRIES_2 = "CREATE TABLE detalle_compra (" +
         "    FOREIGN KEY (id_articulo) REFERENCES articulos(id)" +
         ");"
 private const val SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS MiTabla"
-private const val COLUMN_ID = "id"
-private const val COLUMN_CORREO = "correo"
-private const val COLUMN_PASSWORD = "password_"
 
 class MiDBHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
@@ -67,6 +64,11 @@ class MiDBHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, nu
         val db = this.readableDatabase
         return db.rawQuery("SELECT * FROM usuarios", null)
     }
+
+    fun deleteDatabase(context: Context) {
+        context.deleteDatabase(DATABASE_NAME)
+        Toast.makeText(context, "Base de datos eliminada", Toast.LENGTH_SHORT).show()
+    }
 }
 
 class MainActivity : AppCompatActivity() {
@@ -77,6 +79,7 @@ class MainActivity : AppCompatActivity() {
 
         //Creating the DB
         val dbHelper = MiDBHelper(this)
+        dbHelper.deleteDatabase(this)
         val db = dbHelper.writableDatabase
 
         val mensaje: String = if (db != null) {
@@ -96,7 +99,7 @@ class MainActivity : AppCompatActivity() {
         } else {
             Toast.makeText(this, "Error al insertar datos.", Toast.LENGTH_SHORT).show()
         }
-        db.close()
+        db?.close()
 
         //READ DATA
         val cursor = dbHelper.getUsuarios()
