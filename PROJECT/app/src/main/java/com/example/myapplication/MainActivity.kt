@@ -1,5 +1,6 @@
 package com.example.myapplication
 
+import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.database.sqlite.SQLiteDatabase
@@ -11,7 +12,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 
 private const val DATABASE_VERSION = 1
-private const val DATABASE_NAME = "Foro1.db";
+private const val DATABASE_NAME = "Foro1.db"
 private const val SQL_CREATE_ENTRIES =
     "CREATE TABLE usuarios (" +
             "    id INT PRIMARY KEY," +
@@ -24,7 +25,7 @@ private const val SQL_CREATE_ENTRIES =
                     "    precio DECIMAL(10, 2)," +
                     "    imagen TEXT," +
                     "    descripcion TEXT" +
-                    ");");
+                    ");")
 private const val SQL_CREATE_ENTRIES_2 = "CREATE TABLE detalle_compra (" +
         "    id_detalle INT PRIMARY KEY," +
         "    id_compra INT," +
@@ -47,6 +48,17 @@ class MiDBHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, nu
         db.execSQL(SQL_DELETE_ENTRIES)
         onCreate(db)
     }
+
+    fun insertDataUsuarios(correo: String, password: String): Long {
+        val contentValues = ContentValues()
+        contentValues.put("correo", correo)
+        contentValues.put("password_", password)
+
+        val db = this.writableDatabase
+        val result = db.insert("usuarios", null, contentValues)
+        db.close()
+        return result
+    }
 }
 
 class MainActivity : AppCompatActivity() {
@@ -64,11 +76,19 @@ class MainActivity : AppCompatActivity() {
         } else {
             "Hubo un error al crear la base de datos."
         }
-
         // Mostrar el Toast con el mensaje correspondiente
         Toast.makeText(this, mensaje, Toast.LENGTH_SHORT).show()
 
-        db?.close();
+        val correo = "jordanprueba@prueba.com"
+        val password = "1234"
+        val result = dbHelper.insertDataUsuarios(correo, password)
+
+        if (result != -1L) {
+            Toast.makeText(this, "Datos insertados correctamente.", Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(this, "Error al insertar datos.", Toast.LENGTH_SHORT).show()
+        }
+        //db?.close();
 
         val loginButton = findViewById<Button>(R.id.login)
         val registroButton = findViewById<Button>(R.id.registro)
