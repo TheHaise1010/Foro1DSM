@@ -24,7 +24,6 @@ class MainActivity : AppCompatActivity() {
         val dbHelper = DbHelper(this)
         dbHelper.deleteDatabase(this)
         val db = dbHelper.writableDatabase
-
         val mensaje: String = if (db != null) {
             "La base de datos se creó correctamente."
         } else {
@@ -46,6 +45,7 @@ class MainActivity : AppCompatActivity() {
         db?.close()
 
         //READ DATA
+        /*
         val cursor = dbHelper.getUsuarios()
         if (cursor != null) {
             while (cursor.moveToNext()) {
@@ -59,7 +59,7 @@ class MainActivity : AppCompatActivity() {
             }
             cursor.close()
         }
-
+        */
         //DELETE DATA
         /*
         val idUsuarioAEliminar = 1 // ID del usuario que quieres eliminar
@@ -85,7 +85,10 @@ class MainActivity : AppCompatActivity() {
         }
         registroButton.setOnClickListener {
             val intent = Intent(this, RegistroActivity::class.java)
+            Log.d("MiApp", "Antes de iniciar RegistroActivity")
             startActivity(intent)
+            Log.d("MiApp", "Después de iniciar RegistroActivity")
+
         }
     }
 }

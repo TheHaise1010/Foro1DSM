@@ -11,7 +11,7 @@
         android:layout_centerInParent="true">
 
         <EditText
-            android:id="@+id/email"
+            android:id="@+id/correo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Correo electronico"
@@ -25,7 +25,7 @@
             android:inputType="textPassword" />
 
         <Button
-            android:id="@+id/register"
+            android:id="@+id/registro"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Registrarme" />

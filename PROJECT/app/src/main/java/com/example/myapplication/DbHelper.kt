@@ -81,6 +81,7 @@ class DbHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
         val cursor = db.query("usuarios", null, seleccion, valoresSeleccion, null, null, null)
         val TAG = "MiApp"
         Log.d(TAG, "Correo funcion:" + correo)
+        Log.d(TAG, "Password funcion:" + password)
         if (cursor != null) {
             while (cursor.moveToNext()) {
                 correo_ = cursor.getString(cursor.getColumnIndexOrThrow("correo"))
@@ -91,7 +92,7 @@ class DbHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
 
         Log.d(TAG, "Correo encontrado:" + correo_)
         Log.d(TAG, "Password encontrada: " + password_)
-        if(correo == correo_ && password == password_){
+        if(correo == correo_ && password == password_ && correo_ != "" && password_ !=""){
             return true
         }else{
             return false
