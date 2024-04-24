@@ -7,75 +7,12 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
+import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-
-private const val DATABASE_VERSION = 1
-private const val DATABASE_NAME = "Foro1.db"
-private const val SQL_CREATE_ENTRIES =
-    "CREATE TABLE usuarios (" +
-            "    id INTEGER PRIMARY KEY," +
-            "    correo VARCHAR(255) UNIQUE," +
-            "    password_ VARCHAR(255)" +
-            ");"+
-            ("CREATE TABLE articulos (" +
-                    "    id INTEGER PRIMARY KEY," +
-                    "    nombre VARCHAR(255)," +
-                    "    precio DECIMAL(10, 2)," +
-                    "    imagen TEXT," +
-                    "    descripcion TEXT" +
-                    ");")
-private const val SQL_CREATE_ENTRIES_2 = "CREATE TABLE detalle_compra (" +
-        "    id_detalle INTEGER PRIMARY KEY," +
-        "    id_compra INT," +
-        "    id_articulo INT," +
-        "    cantidad INT," +
-        "    precio_total DECIMAL(10, 2)," +
-        "    FOREIGN KEY (id_compra) REFERENCES compras(id_compra)," +
-        "    FOREIGN KEY (id_articulo) REFERENCES articulos(id)" +
-        ");"
-private const val SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS MiTabla"
-
-class MiDBHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
-
-    override fun onCreate(db: SQLiteDatabase) {
-        db.execSQL(SQL_CREATE_ENTRIES)
-        db.execSQL(SQL_CREATE_ENTRIES_2)
-    }
-
-    override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-        db.execSQL(SQL_DELETE_ENTRIES)
-        onCreate(db)
-    }
-
-    fun insertDataUsuarios(correo: String, password: String): Long {
-        val contentValues = ContentValues()
-        contentValues.put("correo", correo)
-        contentValues.put("password_", password)
-
-        val db = this.writableDatabase
-        val result = db.insert("usuarios", null, contentValues)
-        db.close()
-        return result
-    }
-    fun getUsuarios(): Cursor? {
-        val db = this.readableDatabase
-        return db.rawQuery("SELECT * FROM usuarios", null)
-    }
-
-    fun deleteDatabase(context: Context) {
-        context.deleteDatabase(DATABASE_NAME)
-        Toast.makeText(context, "Base de datos eliminada", Toast.LENGTH_SHORT).show()
-    }
-    fun deleteUsuario(id: Int): Int {
-        val db = this.writableDatabase
-        val resultado = db.delete("usuarios", "id=?", arrayOf(id.toString()))
-        db.close()
-        return resultado
-    }
-}
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -84,7 +21,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         //Creating the DB
-        val dbHelper = MiDBHelper(this)
+        val dbHelper = DbHelper(this)
         dbHelper.deleteDatabase(this)
         val db = dbHelper.writableDatabase
 
@@ -93,17 +30,18 @@ class MainActivity : AppCompatActivity() {
         } else {
             "Hubo un error al crear la base de datos."
         }
-        Toast.makeText(this, mensaje, Toast.LENGTH_SHORT).show()
+        //Toast.makeText(this, mensaje, Toast.LENGTH_SHORT).show()
+        Log.d("MiApp",mensaje)
 
         //INSERT DATA
-        val correo = "jordanprueba3@prueba.com"
-        val password = "1234"
-        val result = dbHelper.insertDataUsuarios(correo, password)
+        val correoTest = "jordanprueba3@prueba.com"
+        val passwordTest = "1234"
+        val result = dbHelper.insertDataUsuarios(correoTest, passwordTest)
 
         if (result != -1L) {
-            Toast.makeText(this, "Datos insertados correctamente.", Toast.LENGTH_SHORT).show()
+            Log.d("MiApp","Datos insertados correctamente.")
         } else {
-            Toast.makeText(this, "Error al insertar datos.", Toast.LENGTH_SHORT).show()
+            Log.d("MiApp","Error al insertar datos.")
         }
         db?.close()
 
@@ -116,13 +54,14 @@ class MainActivity : AppCompatActivity() {
                 val password = cursor.getString(cursor.getColumnIndexOrThrow("password_"))
                 // Hacer algo con los datos leídos, por ejemplo mostrarlos en un Toast
                 val mensaje = "ID: $id, Nombre: $correo, Edad: $password"
-                Toast.makeText(this, mensaje, Toast.LENGTH_SHORT).show()
+                Log.d("MiApp",mensaje)
+                //Toast.makeText(this, mensaje, Toast.LENGTH_SHORT).show()
             }
             cursor.close()
         }
 
         //DELETE DATA
-
+        /*
         val idUsuarioAEliminar = 1 // ID del usuario que quieres eliminar
         val filasEliminadas = dbHelper.deleteUsuario(idUsuarioAEliminar)
         if (filasEliminadas > 0) {
@@ -130,13 +69,19 @@ class MainActivity : AppCompatActivity() {
         } else {
             Toast.makeText(this, "No se encontró ningún usuario con ese ID", Toast.LENGTH_SHORT).show()
         }
-
+        */
         val loginButton = findViewById<Button>(R.id.login)
         val registroButton = findViewById<Button>(R.id.registro)
-
         loginButton.setOnClickListener {
+            val inputCorreo = findViewById<EditText>(R.id.correo).text.toString()
+            val inputPassword = findViewById<EditText>(R.id.password).text.toString()
             val intent = Intent(this, ItemsActivity::class.java)
-            startActivity(intent)
+            if(dbHelper.login(inputCorreo,inputPassword,this)){
+                Toast.makeText(this,"Login exitoso", Toast.LENGTH_SHORT).show()
+                startActivity(intent)
+            }else{
+                Toast.makeText(this,"Correo o password incorrectos", Toast.LENGTH_SHORT).show()
+            }
         }
         registroButton.setOnClickListener {
             val intent = Intent(this, RegistroActivity::class.java)
