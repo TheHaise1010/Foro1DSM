@@ -15,15 +15,15 @@ private const val SQL_CREATE_ENTRIES =
             "    id INTEGER PRIMARY KEY," +
             "    correo VARCHAR(255) UNIQUE," +
             "    password_ VARCHAR(255)" +
-            ");"+
-            ("CREATE TABLE articulos (" +
-                    "    id INTEGER PRIMARY KEY," +
-                    "    nombre VARCHAR(255)," +
-                    "    precio DECIMAL(10, 2)," +
-                    "    imagen TEXT," +
-                    "    descripcion TEXT" +
-                    ");")
-private const val SQL_CREATE_ENTRIES_2 = "CREATE TABLE detalle_compra (" +
+            ");"
+private const val SQL_CREATE_ENTRIES_2 =  "CREATE TABLE articulos (" +
+        "    id INTEGER PRIMARY KEY," +
+        "    nombre VARCHAR(255)," +
+        "    precio DECIMAL(10, 2)," +
+        "    imagen TEXT," +
+        "    descripcion TEXT" +
+        ");"
+private const val SQL_CREATE_ENTRIES_3 = "CREATE TABLE detalle_compra (" +
         "    id_detalle INTEGER PRIMARY KEY," +
         "    id_compra INT," +
         "    id_articulo INT," +
@@ -37,6 +37,8 @@ class DbHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
     override fun onCreate(db: SQLiteDatabase) {
         db.execSQL(SQL_CREATE_ENTRIES)
         db.execSQL(SQL_CREATE_ENTRIES_2)
+        db.execSQL(SQL_CREATE_ENTRIES_3)
+
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
@@ -99,5 +101,93 @@ class DbHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
         }
 
     }
+    fun insertarArticulo(nombre: String, precio: Double, imagen: String, descripcion: String): Long {
+        val contentValues = ContentValues().apply {
+            put("nombre", nombre)
+            put("precio", precio)
+            put("imagen", imagen)
+            put("descripcion", descripcion)
+        }
+        val db = this.writableDatabase
+        val result = db.insert("articulos", null, contentValues)
+        db.close()
+        return result
+    }
+
+    fun agregarArticulosIniciales() {
+        // Artículo 1
+        val nombre1 = "Camiseta"
+        val precio1 = 19.99
+        val imagen1 = "url_imagen_camiseta"
+        val descripcion1 = "Una cómoda camiseta de algodón."
+        var result = insertarArticulo(nombre1, precio1, imagen1, descripcion1)
+
+        if(result!=-1L){
+            Log.d("MiApp","Articulo agregado correctamente")
+        }else{
+            Log.d("MiApp","Articulo no fue agregado")
+        }
+
+        // Artículo 2
+        val nombre2 = "Pantalones"
+        val precio2 = 29.99
+        val imagen2 = "url_imagen_pantalones"
+        val descripcion2 = "Un par de pantalones de mezclilla."
+        result = insertarArticulo(nombre2, precio2, imagen2, descripcion2)
+        if(result!=-1L){
+            Log.d("MiApp","Articulo agregado correctamente")
+        }else{
+            Log.d("MiApp","Articulo no fue agregado")
+        }
+
+        // Artículo 3
+        val nombre3 = "Zapatos"
+        val precio3 = 39.99
+        val imagen3 = "url_imagen_zapatos"
+        val descripcion3 = "Un par de zapatos elegantes."
+        result=insertarArticulo(nombre3, precio3, imagen3, descripcion3)
+        if(result!=-1L){
+            Log.d("MiApp","Articulo agregado correctamente")
+        }else{
+            Log.d("MiApp","Articulo no fue agregado")
+        }
+        // Artículo 4
+        val nombre4 = "Bolso"
+        val precio4 = 49.99
+        val imagen4 = "url_imagen_bolso"
+        val descripcion4 = "Un bolso de moda para llevar tus pertenencias."
+        result = insertarArticulo(nombre4, precio4, imagen4, descripcion4)
+        if(result!=-1L){
+            Log.d("MiApp","Articulo agregado correctamente")
+        }else{
+            Log.d("MiApp","Articulo no fue agregado")
+        }
+        mostrarArticulos()
+    }
+
+    fun mostrarArticulos() {
+        Log.d("MiApp","Primer linea")
+
+        try {
+            val db = this.readableDatabase
+            val cursor = db.rawQuery("SELECT * FROM articulos", null)
+            if (cursor != null) {
+                while (cursor.moveToNext()) {
+                    val id = cursor.getInt(cursor.getColumnIndexOrThrow("id"))
+                    val nombre = cursor.getString(cursor.getColumnIndexOrThrow("nombre"))
+                    val precio = cursor.getDouble(cursor.getColumnIndexOrThrow("precio"))
+                    val imagen = cursor.getString(cursor.getColumnIndexOrThrow("imagen"))
+                    val descripcion = cursor.getString(cursor.getColumnIndexOrThrow("descripcion"))
+                    val mensaje = "ID: $id, Nombre: $nombre, Precio: $precio, Imagen: $imagen, Descripcion: $descripcion"
+                    Log.d("MiApp",mensaje)
+                }
+                cursor.close()
+            }
+        }catch (e:Exception){
+            Log.d("MiApp", e.toString())
+        }
+
+    }
+
 
 }

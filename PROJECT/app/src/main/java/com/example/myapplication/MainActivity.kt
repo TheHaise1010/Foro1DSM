@@ -90,5 +90,8 @@ class MainActivity : AppCompatActivity() {
             Log.d("MiApp", "Después de iniciar RegistroActivity")
 
         }
+
+        //Insertar articulos
+        dbHelper.agregarArticulosIniciales()
     }
 }
