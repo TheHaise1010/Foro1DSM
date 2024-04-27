@@ -90,6 +90,7 @@ class ItemsActivity : AppCompatActivity() {
                     val descripcionTextView = findViewById<TextView>(getIdForName("description", index))
                     val addButton = findViewById<Button>(getIdForName("add", index))
                      */
+                    val id = cursor.getInt(cursor.getColumnIndexOrThrow("id"))
                     val nombre = cursor.getString(cursor.getColumnIndexOrThrow("nombre"))
                     val precio = cursor.getDouble(cursor.getColumnIndexOrThrow("precio"))
                     val descripcion = cursor.getString(cursor.getColumnIndexOrThrow("descripcion"))
@@ -112,7 +113,7 @@ class ItemsActivity : AppCompatActivity() {
                         setPadding(16.dpToPx(), 16.dpToPx(), 16.dpToPx(), 16.dpToPx())
                     }
                     var textView = TextView(this).apply {
-                        id = View.generateViewId()
+                        this.id = id
                         layoutParams = LinearLayout.LayoutParams(
                             LinearLayout.LayoutParams.WRAP_CONTENT,
                             LinearLayout.LayoutParams.WRAP_CONTENT
@@ -124,7 +125,7 @@ class ItemsActivity : AppCompatActivity() {
                         setPadding(0, 0, 0, 20.dpToPx())
                     }
                     val button = Button(this).apply {
-                        id = View.generateViewId()
+                        this.id = View.generateViewId()
                         layoutParams = LinearLayout.LayoutParams(
                             LinearLayout.LayoutParams.WRAP_CONTENT,
                             LinearLayout.LayoutParams.WRAP_CONTENT
@@ -133,7 +134,7 @@ class ItemsActivity : AppCompatActivity() {
                     }
                     layouthijo.addView(textView)
                     textView = TextView(this).apply {
-                        id = View.generateViewId()
+                        this.id = id
                         layoutParams = LinearLayout.LayoutParams(
                             LinearLayout.LayoutParams.WRAP_CONTENT,
                             LinearLayout.LayoutParams.WRAP_CONTENT
@@ -146,7 +147,7 @@ class ItemsActivity : AppCompatActivity() {
                     }
                     layouthijo.addView(textView)
                     textView = TextView(this).apply {
-                        id = View.generateViewId()
+                        this.id = id
                         layoutParams = LinearLayout.LayoutParams(
                             LinearLayout.LayoutParams.WRAP_CONTENT,
                             LinearLayout.LayoutParams.WRAP_CONTENT
