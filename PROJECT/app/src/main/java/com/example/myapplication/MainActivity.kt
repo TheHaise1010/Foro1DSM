@@ -33,7 +33,7 @@ class MainActivity : AppCompatActivity() {
         Log.d("MiApp",mensaje)
 
         //INSERT DATA
-        val correoTest = "jordanprueba3@prueba.com"
+        val correoTest = "1234"
         val passwordTest = "1234"
         val result = dbHelper.insertDataUsuarios(correoTest, passwordTest)
 
@@ -93,5 +93,9 @@ class MainActivity : AppCompatActivity() {
 
         //Insertar articulos
         dbHelper.agregarArticulosIniciales()
+    }
+
+    fun obtenerContexto(): Context {
+        return this
     }
 }

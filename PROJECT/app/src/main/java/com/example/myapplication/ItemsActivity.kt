@@ -1,7 +1,11 @@
 package com.example.myapplication
 
+import android.database.Cursor
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
+import android.widget.Button
+import android.widget.TextView
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.navigation.NavigationView
 import androidx.navigation.findNavController
@@ -12,6 +16,7 @@ import androidx.navigation.ui.setupWithNavController
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.appcompat.app.AppCompatActivity
 import com.example.myapplication.databinding.ActivityItemsBinding
+
 
 class ItemsActivity : AppCompatActivity() {
 
@@ -43,6 +48,11 @@ class ItemsActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+        /*val nombreTextView = findViewById<TextView>(getIdForName("name", 1))
+        nombreTextView.text = "PRUEBA"*/
+        val dbHelper = DbHelper(this)
+        val cursor = dbHelper.getArticulos()
+        mostrarArticulosEnVistas(cursor)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -55,4 +65,37 @@ class ItemsActivity : AppCompatActivity() {
         val navController = findNavController(R.id.nav_host_fragment_content_items)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
+
+    private fun mostrarArticulosEnVistas(cursor: Cursor?) {
+        try{
+            if (cursor != null) {
+                var index = 1
+                while (cursor.moveToNext()) {
+                    Log.d("MiApp","Testing primer linea")
+                    val nombreTextView = findViewById<TextView>(getIdForName("name", index))
+                    val precioTextView = findViewById<TextView>(getIdForName("price", index))
+                    val descripcionTextView = findViewById<TextView>(getIdForName("description", index))
+                    val addButton = findViewById<Button>(getIdForName("add", index))
+
+                    val nombre = cursor.getString(cursor.getColumnIndexOrThrow("nombre"))
+                    val precio = cursor.getDouble(cursor.getColumnIndexOrThrow("precio"))
+                    val descripcion = cursor.getString(cursor.getColumnIndexOrThrow("descripcion"))
+
+                    nombreTextView.text = nombre
+                    precioTextView.text = "$" + String.format("%.2f", precio)
+                    descripcionTextView.text = descripcion
+                    index++
+                }
+                cursor.close()
+            }
+        }catch (e:Exception){
+            Log.d("MiApp",e.toString())
+        }
+
+    }
+
+    private fun getIdForName(baseName: String, index: Int): Int {
+        return resources.getIdentifier("${baseName}${index}", "id", packageName)
+    }
+
 }

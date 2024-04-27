@@ -162,31 +162,32 @@ class DbHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
         }else{
             Log.d("MiApp","Articulo no fue agregado")
         }
-        mostrarArticulos()
+        getArticulos()
     }
 
-    fun mostrarArticulos() {
-        Log.d("MiApp","Primer linea")
-
+    fun getArticulos():Cursor? {
         try {
             val db = this.readableDatabase
             val cursor = db.rawQuery("SELECT * FROM articulos", null)
-            if (cursor != null) {
-                while (cursor.moveToNext()) {
-                    val id = cursor.getInt(cursor.getColumnIndexOrThrow("id"))
-                    val nombre = cursor.getString(cursor.getColumnIndexOrThrow("nombre"))
-                    val precio = cursor.getDouble(cursor.getColumnIndexOrThrow("precio"))
-                    val imagen = cursor.getString(cursor.getColumnIndexOrThrow("imagen"))
-                    val descripcion = cursor.getString(cursor.getColumnIndexOrThrow("descripcion"))
-                    val mensaje = "ID: $id, Nombre: $nombre, Precio: $precio, Imagen: $imagen, Descripcion: $descripcion"
-                    Log.d("MiApp",mensaje)
-                }
-                cursor.close()
-            }
+           if (cursor != null) {
+               Log.d("MiApp","Cursor no es null")
+               return cursor;
+               /*
+               while (cursor.moveToNext()) {
+                   val id = cursor.getInt(cursor.getColumnIndexOrThrow("id"))
+                   val nombre = cursor.getString(cursor.getColumnIndexOrThrow("nombre"))
+                   val precio = cursor.getDouble(cursor.getColumnIndexOrThrow("precio"))
+                   val imagen = cursor.getString(cursor.getColumnIndexOrThrow("imagen"))
+                   val descripcion = cursor.getString(cursor.getColumnIndexOrThrow("descripcion"))
+                   val mensaje = "ID: $id, Nombre: $nombre, Precio: $precio, Imagen: $imagen, Descripcion: $descripcion"
+                   Log.d("MiApp",mensaje)
+               }
+               */
+           }
         }catch (e:Exception){
             Log.d("MiApp", e.toString())
         }
-
+        return null;
     }
 
 
