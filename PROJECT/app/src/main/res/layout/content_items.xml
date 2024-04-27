@@ -5,9 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:showIn="@layout/app_bar_items">
+    tools:showIn="@layout/app_bar_items"
+    >
 
-    
+
     <fragment
         android:id="@+id/nav_host_fragment_content_items"
         android:name="androidx.navigation.fragment.NavHostFragment"
@@ -28,137 +29,10 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:orientation="vertical">
+            android:gravity="center"
+            android:orientation="vertical"
+            android:id="@+id/layout_padre_linear">
 
-            <!-- Aquí es donde irían tus 6 artículos. -->
-            <!-- Artículo 1 -->
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
-
-                <TextView
-                    android:id="@+id/name1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Nombre del artículo 1" />
-
-                <TextView
-                    android:id="@+id/price1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Precio del artículo 1" />
-
-                <TextView
-                    android:id="@+id/description1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Descripción del artículo 1" />
-
-                <Button
-                    android:id="@+id/add1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Agregar" />
-            </LinearLayout>
-
-            <!-- Artículo 2 -->
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
-
-                <TextView
-                    android:id="@+id/name2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Nombre del artículo 2" />
-
-                <TextView
-                    android:id="@+id/price2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Precio del artículo 2" />
-
-                <TextView
-                    android:id="@+id/description2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Descripción del artículo 2" />
-
-                <Button
-                    android:id="@+id/add2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Agregar" />
-            </LinearLayout>
-
-            <!-- Artículo 3 -->
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
-
-                <TextView
-                    android:id="@+id/name3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Nombre del artículo 3" />
-
-                <TextView
-                    android:id="@+id/price3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Precio del artículo 3" />
-
-                <TextView
-                    android:id="@+id/description3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Descripción del artículo 3" />
-
-                <Button
-                    android:id="@+id/add3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Agregar" />
-            </LinearLayout>
-
-            <!-- Artículo 4 -->
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
-
-                <TextView
-                    android:id="@+id/name4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Nombre del artículo 4" />
-
-                <TextView
-                    android:id="@+id/price4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Precio del artículo 4" />
-
-                <TextView
-                    android:id="@+id/description4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Descripción del artículo 4" />
-
-                <Button
-                    android:id="@+id/add4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Agregar" />
-            </LinearLayout>
 
         </LinearLayout>
     </ScrollView>
