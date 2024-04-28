@@ -10,7 +10,7 @@ import android.widget.Toast
 import org.json.JSONArray
 import org.json.JSONObject
 
-private const val usuario = ""
+private var usuario = 0
 private var articulosArray:JSONArray = JSONArray()
 private const val DATABASE_VERSION = 1
 private const val DATABASE_NAME = "Foro1.db"
@@ -33,9 +33,16 @@ private const val SQL_CREATE_ENTRIES_3 = "CREATE TABLE detalle_compra (" +
         "    id_articulo INT," +
         "    cantidad INT," +
         "    precio_total DECIMAL(10, 2)," +
-        "    FOREIGN KEY (id_compra) REFERENCES compras(id_compra)," +
+        "    id_usuario INT," +
+        "    FOREIGN KEY (id_usuario) REFERENCES usuarios(id)," +
         "    FOREIGN KEY (id_articulo) REFERENCES articulos(id)" +
         ");"
+private const val TABLE_DETALLE_COMPRA = "detalle_compra"
+private const val COLUMN_ID_USUARIO = "id_usuario"
+private const val COLUMN_ID_COMPRA = "id_compra"
+private const val COLUMN_ID_ARTICULO = "id_articulo"
+private const val COLUMN_CANTIDAD = "cantidad"
+private const val COLUMN_PRECIO_TOTAL = "precio_total"
 private const val SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS MiTabla"
 class DbHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
     override fun onCreate(db: SQLiteDatabase) {
@@ -52,6 +59,14 @@ class DbHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
 
     fun getArticulosArray():JSONArray{
         return articulosArray
+    }
+
+    fun deleteArticulosArray(){
+        articulosArray = JSONArray()
+    }
+
+    fun getCurrentUsuarioId():Int{
+        return usuario
     }
     fun insertDataUsuarios(correo: String, password: String): Long {
         val contentValues = ContentValues()
@@ -105,6 +120,7 @@ class DbHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
         Log.d(TAG, "Password funcion:" + password)
         if (cursor != null) {
             while (cursor.moveToNext()) {
+                usuario = cursor.getInt(cursor.getColumnIndexOrThrow("id"))
                 correo_ = cursor.getString(cursor.getColumnIndexOrThrow("correo"))
                 password_ = cursor.getString(cursor.getColumnIndexOrThrow("password_"))
             }
@@ -231,6 +247,28 @@ class DbHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
             }
             cursor.close()
         }
+    }
+    fun agregarDetalleCompra(articulos:JSONArray):Long? {
+
+        try{
+            val db = this.writableDatabase
+            for (i in 0 until articulos.length()) {
+                val articulo = articulos.getJSONObject(i)
+                val values = ContentValues().apply {
+                    put(COLUMN_ID_COMPRA, 1)
+                    put(COLUMN_ID_ARTICULO, articulo.getInt("id"))
+                    put(COLUMN_CANTIDAD, 4)
+                    put(COLUMN_ID_USUARIO, usuario)
+                    put(COLUMN_PRECIO_TOTAL, 100)
+                }
+                val result = db.insert(TABLE_DETALLE_COMPRA, null, values)
+                return result
+            }
+            db.close()
+        }catch (e:Exception){
+            Log.d("MiApp",e.toString())
+        }
+        return null
     }
 
 }

@@ -1,5 +1,6 @@
 package com.example.myapplication
 
+import android.content.Intent
 import android.content.res.Resources
 import android.database.Cursor
 import android.graphics.Color
@@ -10,6 +11,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -30,6 +32,16 @@ class ShowCartActivity : AppCompatActivity() {
             val buttonComprar = findViewById<Button>(R.id.button_comprar)
             buttonComprar.visibility = View.VISIBLE
             mostrarArticulosEnVistas(dbHelper.getArticulosArray())
+            buttonComprar.setOnClickListener {
+                if(dbHelper.agregarDetalleCompra(dbHelper.getArticulosArray()) != -1L){
+                    Toast.makeText(this,"Compra realizada con exito", Toast.LENGTH_SHORT).show()
+                    dbHelper.deleteArticulosArray()
+                    val intent = Intent(this, ItemsActivity::class.java)
+                    startActivity(intent)
+                }else{
+                    Toast.makeText(this,"Sucedio un problema con la compra", Toast.LENGTH_SHORT).show()
+                }
+            }
         }else{
             val layoutPadre = findViewById<LinearLayout>(R.id.layout_padre_linear)
             val texto = TextView(this)
