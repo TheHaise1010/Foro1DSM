@@ -1,5 +1,6 @@
 package com.example.myapplication
 
+import android.content.Intent
 import android.content.res.Resources
 import android.database.Cursor
 import android.graphics.Color
@@ -23,6 +24,7 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.example.myapplication.databinding.ActivityItemsBinding
+import org.json.JSONArray
 import kotlin.math.roundToInt
 
 
@@ -30,6 +32,7 @@ class ItemsActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityItemsBinding
+    private val dbHelper = DbHelper(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,9 +43,8 @@ class ItemsActivity : AppCompatActivity() {
         setSupportActionBar(binding.appBarItems.toolbar)
 
         binding.appBarItems.fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null)
-                .setAnchorView(R.id.fab).show()
+            val intent = Intent(this, ShowCartActivity::class.java)
+            startActivity(intent)
         }
         val drawerLayout: DrawerLayout = binding.drawerLayout
         val navView: NavigationView = binding.navView
@@ -58,7 +60,6 @@ class ItemsActivity : AppCompatActivity() {
         navView.setupWithNavController(navController)
         /*val nombreTextView = findViewById<TextView>(getIdForName("name", 1))
         nombreTextView.text = "PRUEBA"*/
-        val dbHelper = DbHelper(this)
         val cursor = dbHelper.getArticulos()
         mostrarArticulosEnVistas(cursor)
 
@@ -125,12 +126,20 @@ class ItemsActivity : AppCompatActivity() {
                         setPadding(0, 0, 0, 20.dpToPx())
                     }
                     val button = Button(this).apply {
-                        this.id = View.generateViewId()
+                        this.id = id
                         layoutParams = LinearLayout.LayoutParams(
                             LinearLayout.LayoutParams.WRAP_CONTENT,
                             LinearLayout.LayoutParams.WRAP_CONTENT
                         )
                         text = "Agregar"
+                        try {
+                            setOnClickListener{
+                                dbHelper.addArticuloCart(id)
+                                //Log.d("MiApp","Probando boton")
+                            }
+                        }catch (e:Exception){
+                            Log.d("MiApp",e.toString())
+                        }
                     }
                     layouthijo.addView(textView)
                     textView = TextView(this).apply {

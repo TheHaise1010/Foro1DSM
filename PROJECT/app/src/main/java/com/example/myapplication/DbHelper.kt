@@ -7,7 +7,11 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
 import android.widget.Toast
+import org.json.JSONArray
+import org.json.JSONObject
 
+private const val usuario = ""
+private var articulosArray:JSONArray = JSONArray()
 private const val DATABASE_VERSION = 1
 private const val DATABASE_NAME = "Foro1.db"
 private const val SQL_CREATE_ENTRIES =
@@ -73,6 +77,18 @@ class DbHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
         return resultado
     }
 
+    fun getArticulo(id:Int):Cursor?{
+        try{
+            val db = this.readableDatabase
+            val seleccion = "id = ?"
+            val valoresSeleccion = arrayOf(id.toString())
+            val cursor = db.query("articulos", null, seleccion, valoresSeleccion, null, null, null)
+            return cursor
+        }catch (e:Exception){
+            Log.d("MiApp",e.toString())
+        }
+        return null
+    }
     fun login(correo:String, password:String, context: Context):Boolean{
 
         var correo_ = ""
@@ -190,5 +206,28 @@ class DbHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
         return null;
     }
 
+    fun addArticuloCart(id:Int){
+        //Log.d("MiApp","addArticuloCart() " + id)
+        val articulo = JSONObject()
+        val cursor = getArticulo(id)
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                articulo.put("id", cursor.getString(cursor.getColumnIndexOrThrow("id")))
+                Log.d("MiApp",cursor.getString(cursor.getColumnIndexOrThrow("id")))
+                articulo.put("nombre", cursor.getString(cursor.getColumnIndexOrThrow("nombre")))
+                Log.d("MiApp",cursor.getString(cursor.getColumnIndexOrThrow("nombre")))
+                articulo.put("imagen", cursor.getString(cursor.getColumnIndexOrThrow("imagen")))
+                Log.d("MiApp",cursor.getString(cursor.getColumnIndexOrThrow("imagen")))
+                articulo.put("precio", cursor.getString(cursor.getColumnIndexOrThrow("precio")))
+                Log.d("MiApp",cursor.getInt(cursor.getColumnIndexOrThrow("precio")).toString())
+                articulo.put("descripcion", cursor.getString(cursor.getColumnIndexOrThrow("descripcion")))
+                Log.d("MiApp",cursor.getString(cursor.getColumnIndexOrThrow("descripcion")))
+                Log.d("MiApp","JSONObject: " + articulo)
+                articulosArray.put(articulo)
+                Log.d("MiApp","Articulos Array: " + articulosArray)
+            }
+            cursor.close()
+        }
+    }
 
 }
