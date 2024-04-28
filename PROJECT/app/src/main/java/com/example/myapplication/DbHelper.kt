@@ -50,6 +50,9 @@ class DbHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
         onCreate(db)
     }
 
+    fun getArticulosArray():JSONArray{
+        return articulosArray
+    }
     fun insertDataUsuarios(correo: String, password: String): Long {
         val contentValues = ContentValues()
         contentValues.put("correo", correo)
@@ -212,14 +215,14 @@ class DbHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
         val cursor = getArticulo(id)
         if (cursor != null) {
             while (cursor.moveToNext()) {
-                articulo.put("id", cursor.getString(cursor.getColumnIndexOrThrow("id")))
+                articulo.put("id", cursor.getInt(cursor.getColumnIndexOrThrow("id")))
                 Log.d("MiApp",cursor.getString(cursor.getColumnIndexOrThrow("id")))
                 articulo.put("nombre", cursor.getString(cursor.getColumnIndexOrThrow("nombre")))
                 Log.d("MiApp",cursor.getString(cursor.getColumnIndexOrThrow("nombre")))
                 articulo.put("imagen", cursor.getString(cursor.getColumnIndexOrThrow("imagen")))
                 Log.d("MiApp",cursor.getString(cursor.getColumnIndexOrThrow("imagen")))
-                articulo.put("precio", cursor.getString(cursor.getColumnIndexOrThrow("precio")))
-                Log.d("MiApp",cursor.getInt(cursor.getColumnIndexOrThrow("precio")).toString())
+                articulo.put("precio", cursor.getDouble(cursor.getColumnIndexOrThrow("precio")))
+                Log.d("MiApp",cursor.getDouble(cursor.getColumnIndexOrThrow("precio")).toString())
                 articulo.put("descripcion", cursor.getString(cursor.getColumnIndexOrThrow("descripcion")))
                 Log.d("MiApp",cursor.getString(cursor.getColumnIndexOrThrow("descripcion")))
                 Log.d("MiApp","JSONObject: " + articulo)
